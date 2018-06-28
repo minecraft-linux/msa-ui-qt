@@ -4,6 +4,8 @@
 #include <QDialog>
 #include "loginipcservice.h"
 
+class QLabel;
+
 class PickAccountWindow : public QDialog {
     Q_OBJECT
 private:
@@ -40,14 +42,17 @@ Q_OBJECT
 
 private:
     QString entryCid;
+    QLabel* image;
 
 public:
-    PickAccountRow(PickAccountEntry const& entry, QWidget* parent = nullptr);
+    PickAccountRow(PickAccountEntry const& entry, QPixmap& fallbackIcon, QWidget* parent = nullptr);
 
     QString const& cid() const { return entryCid; }
 
 public slots:
     void remove();
+
+    void setImage(QImage const& image);
 
 protected:
     void contextMenuEvent(QContextMenuEvent* event) override;

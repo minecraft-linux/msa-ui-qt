@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>src/injectjs.js</file>
+        <file>res/default_profile.svg</file>
     </qresource>
 </RCC>
