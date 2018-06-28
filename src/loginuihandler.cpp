@@ -1,5 +1,6 @@
 #include "loginuihandler.h"
 #include "webloginwindow.h"
+#include "pickaccountwindow.h"
 #include <QUrl>
 
 LoginUIHandler::LoginUIHandler(QApplication& app) : app(app) {
@@ -7,6 +8,23 @@ LoginUIHandler::LoginUIHandler(QApplication& app) : app(app) {
 
 void LoginUIHandler::onStopRequested() {
     app.quit();
+}
+
+void LoginUIHandler::pickAccount(QVector<PickAccountEntry> const& accounts,
+                                 simpleipc::server::rpc_handler::result_handler const& handler) {
+    PickAccountWindow* window = new PickAccountWindow(accounts);
+    connect(window, &QDialog::finished, [window, handler](int result) {
+        if (result == QDialog::Accepted) {
+            if (window->shouldAddNewAccount())
+                handler(simpleipc::rpc_json_result::response({{"add_account", true}}));
+            else
+                handler(simpleipc::rpc_json_result::response({{"cid", window->cid().toStdString()}}));
+        } else {
+            handler(simpleipc::rpc_json_result::error(-501, "Operation cancelled by user"));
+        }
+        window->deleteLater();
+    });
+    window->open();
 }
 
 void LoginUIHandler::openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler) {

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QApplication>
 #include <simpleipc/server/rpc_handler.h>
+#include "loginipcservice.h"
 
 class LoginUIHandler : public QObject {
     Q_OBJECT
@@ -15,6 +16,9 @@ public:
 
 public slots:
     void onStopRequested();
+
+    void pickAccount(QVector<PickAccountEntry> const& accounts,
+                     simpleipc::server::rpc_handler::result_handler const& handler);
 
     void openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler);
 

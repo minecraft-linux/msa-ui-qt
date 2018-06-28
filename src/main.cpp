@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<simpleipc::server::rpc_handler::result_handler>("simpleipc::server::rpc_handler::result_handler");
+    qRegisterMetaType<QVector<PickAccountEntry>>("QVector<PickAccountEntry>");
 
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
@@ -25,6 +26,7 @@ int main(int argc, char *argv[]) {
     LoginIPCService service(path, mode);
     LoginUIHandler uiHandler (app);
     QObject::connect(&service, &LoginIPCService::stopRequested, &uiHandler, &LoginUIHandler::onStopRequested);
+    QObject::connect(&service, &LoginIPCService::pickAccount, &uiHandler, &LoginUIHandler::pickAccount);
     QObject::connect(&service, &LoginIPCService::openBrowser, &uiHandler, &LoginUIHandler::openBrowser);
     return app.exec();
 }

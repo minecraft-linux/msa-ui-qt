@@ -4,6 +4,11 @@
 #include <daemon_utils/auto_shutdown_service.h>
 #include <QObject>
 
+struct PickAccountEntry {
+    QString cid;
+    QString username;
+};
+
 class LoginIPCService : public QObject, public daemon_utils::auto_shutdown_service {
     Q_OBJECT
 
@@ -15,10 +20,15 @@ public:
 
     simpleipc::rpc_json_result handleExit();
 
+    void handlePickAccount(nlohmann::json const& data, rpc_handler::result_handler const& handler);
+
     void handleOpenBrowser(nlohmann::json const& data, rpc_handler::result_handler const& handler);
 
 signals:
     void stopRequested();
+
+    void pickAccount(QVector<PickAccountEntry> const& accounts,
+                     simpleipc::server::rpc_handler::result_handler const& handler);
 
     void openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler);
 
