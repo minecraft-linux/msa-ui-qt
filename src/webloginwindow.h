@@ -11,13 +11,10 @@ class QWebEngineView;
 class WebLoginWindow : public QDialog {
     Q_OBJECT
 private:
-    static const char* const DEFAULT_URL;
-
     QStackedLayout* stacked;
     QWidget* loadingIndicatorCtr;
     QWebEngineView* webView;
     QMap<QString, QString> propertyMap;
-    bool succeeded = false;
 
     void setupWebBrowser();
     void injectWebScripts();
@@ -25,9 +22,7 @@ private:
     void onLoadFinished(bool ok);
 
 public:
-    explicit WebLoginWindow(QWidget *parent = nullptr);
-
-    bool hasSucceeded() const { return succeeded; }
+    explicit WebLoginWindow(QUrl url, QWidget *parent = nullptr);
 
     QMap<QString, QString> const& properties() const { return propertyMap; }
 

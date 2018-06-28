@@ -7,8 +7,7 @@
 #include <QPen>
 #include <QtMath>
 
-class MaterialBusyIndicator : public QWidget
-{
+class MaterialBusyIndicator : public QWidget {
     Q_OBJECT
 protected:
     QTimer timer;

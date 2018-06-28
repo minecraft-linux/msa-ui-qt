@@ -11,9 +11,7 @@
 #include <QWebChannel>
 #include "materialbusyindicator.h"
 
-const char* const WebLoginWindow::DEFAULT_URL = "https://login.live.com/ppsecure/InlineConnect.srf?id=80604&platform=android2.1.0504.0524";
-
-WebLoginWindow::WebLoginWindow(QWidget *parent) : QDialog(parent) {
+WebLoginWindow::WebLoginWindow(QUrl url, QWidget *parent) : QDialog(parent) {
     setWindowFlag(Qt::Dialog);
     setWindowTitle("Microsoft Account Sign-In");
     resize(480, 640);
@@ -30,7 +28,7 @@ WebLoginWindow::WebLoginWindow(QWidget *parent) : QDialog(parent) {
     webView = new QWebEngineView(this);
     stacked->addWidget(webView);
     setupWebBrowser();
-    webView->setUrl(QUrl(DEFAULT_URL));
+    webView->setUrl(url);
 
     setLayout(stacked);
 }
@@ -80,11 +78,9 @@ void WebLoginWindow::setProperty(QString const& name, QString const& value) {
 }
 
 void WebLoginWindow::onFinalNext() {
-    succeeded = true;
-    close();
+    accept();
 }
 
 void WebLoginWindow::onFinalBack() {
-    succeeded = false;
-    close();
+    reject();
 }
