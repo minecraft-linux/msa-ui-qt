@@ -46,6 +46,11 @@ public:
 
     QString const& cid() const { return entryCid; }
 
+public slots:
+    void remove();
+
+protected:
+    void contextMenuEvent(QContextMenuEvent* event) override;
 
 };
 

@@ -10,5 +10,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core Widgets WebEngineWidgets REQUIRED)
 
-add_executable(msa-ui-qt src/main.cpp src/webloginwindow.cpp src/webloginwindow.h src/materialbusyindicator.cpp src/materialbusyindicator.h src/loginipcservice.cpp src/loginipcservice.h src/loginuihandler.cpp src/loginuihandler.h src/pickaccountwindow.cpp src/pickaccountwindow.h msaui.qrc)
-target_link_libraries(msa-ui-qt Qt5::Core Qt5::Widgets Qt5::WebEngineWidgets daemon-server-utils)
+add_executable(msa-ui-qt src/main.cpp src/webloginwindow.cpp src/webloginwindow.h src/materialbusyindicator.cpp src/materialbusyindicator.h src/loginipcservice.cpp src/loginipcservice.h src/loginuihandler.cpp src/loginuihandler.h src/pickaccountwindow.cpp src/pickaccountwindow.h src/msadaemonmanager.cpp src/msadaemonmanager.h src/msadaemonmanager.cpp msaui.qrc)
+target_link_libraries(msa-ui-qt Qt5::Core Qt5::Widgets Qt5::WebEngineWidgets daemon-server-utils msa-daemon-client)

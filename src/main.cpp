@@ -4,6 +4,7 @@
 #include "webloginwindow.h"
 #include "loginipcservice.h"
 #include "loginuihandler.h"
+#include "msadaemonmanager.h"
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<simpleipc::server::rpc_handler::result_handler>("simpleipc::server::rpc_handler::result_handler");
@@ -20,6 +21,7 @@ int main(int argc, char *argv[]) {
     parser.addOption(autoExitOption);
     parser.addOption(msaPathOption);
     parser.process(app);
+    MsaDaemonManager::instance.setPath(parser.value(msaPathOption).toStdString());
     std::string path = parser.value(pathOption).toStdString();
     auto mode = parser.isSet(autoExitOption) ? daemon_utils::shutdown_policy::no_connections
                                              : daemon_utils::shutdown_policy::never;

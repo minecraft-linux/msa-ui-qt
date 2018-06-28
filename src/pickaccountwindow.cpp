@@ -1,8 +1,10 @@
 #include "pickaccountwindow.h"
+#include "msadaemonmanager.h"
 #include <QScrollArea>
 #include <QBoxLayout>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QMenu>
 
 PickAccountWindow::PickAccountWindow(QVector<PickAccountEntry> entries, QWidget* parent) : QDialog(parent) {
     setWindowFlag(Qt::Dialog);
@@ -50,7 +52,7 @@ PickAccountWindow::PickAccountWindow(QVector<PickAccountEntry> entries, QWidget*
 }
 
 void ClickableWidget::mouseReleaseEvent(QMouseEvent* event) {
-    if (rect().contains(event->pos()))
+    if (rect().contains(event->pos()) && event->button() == Qt::LeftButton)
         emit clicked();
 }
 
@@ -61,6 +63,23 @@ PickAccountRow::PickAccountRow(PickAccountEntry const& entry, QWidget* parent) :
     label->setText(entry.username);
     layout->addWidget(label);
     setLayout(layout);
+}
+
+void PickAccountRow::contextMenuEvent(QContextMenuEvent* event) {
+    QMenu menu(this);
+    QAction removeAction("Remove");
+    connect(&removeAction, &QAction::triggered, this, &PickAccountRow::remove);
+    menu.addAction(&removeAction);
+    menu.exec(event->globalPos());
+}
+
+void PickAccountRow::remove() {
+    auto msa = MsaDaemonManager::instance.connectToMsa();
+    if (msa) {
+        auto res = msa->removeAccount(cid().toStdString()).call();
+        if (res.success())
+            deleteLater();
+    }
 }
 
 AddAccountRow::AddAccountRow(QWidget* parent) : ClickableWidget(parent) {
