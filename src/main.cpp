@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QTextStream>
 #include <QtCore/QCommandLineParser>
+#include <QFile>
 #include "webloginwindow.h"
 #include "loginipcservice.h"
 #include "loginuihandler.h"
@@ -11,6 +12,11 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<QVector<PickAccountEntry>>("QVector<PickAccountEntry>");
 
     QApplication app(argc, argv);
+    {
+        QFile file (":/res/style.css");
+        file.open(QIODevice::ReadOnly);
+        app.setStyleSheet(file.readAll());
+    }
     app.setQuitOnLastWindowClosed(false);
     QCommandLineParser parser;
     parser.addHelpOption();

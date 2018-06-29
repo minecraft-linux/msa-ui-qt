@@ -38,8 +38,7 @@ signals:
 
 
 class PickAccountRow : public ClickableWidget {
-Q_OBJECT
-
+    Q_OBJECT
 private:
     QString entryCid;
     QLabel* image;
@@ -57,6 +56,8 @@ public slots:
 protected:
     void contextMenuEvent(QContextMenuEvent* event) override;
 
+    void paintEvent(QPaintEvent* event) override;
+
 };
 
 class AddAccountRow : public ClickableWidget {
@@ -64,6 +65,9 @@ Q_OBJECT
 
 public:
     AddAccountRow(QWidget* parent = nullptr);
+
+protected:
+    void paintEvent(QPaintEvent* event) override;
 
 };
 

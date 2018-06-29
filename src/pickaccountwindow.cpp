@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QMenu>
+#include <QPainter>
+#include <QStyleOption>
 #include "msadaemonmanager.h"
 #include "profilepicturemanager.h"
 
@@ -20,12 +22,8 @@ PickAccountWindow::PickAccountWindow(QVector<PickAccountEntry> entries, QWidget*
     QWidget* listWidget = new QWidget(this);
     QVBoxLayout* listLayout = new QVBoxLayout(listWidget);
     listLayout->setMargin(0);
-
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, Qt::white);
-    listWidget->setAutoFillBackground(true);
-    listWidget->setPalette(pal);
-
+    listLayout->setSpacing(0);
+    listWidget->setProperty("class", "pick-account-list");
     listWidget->setLayout(listLayout);
     listScrollArea->setWidgetResizable(true);
     listScrollArea->setWidget(listWidget);
@@ -101,6 +99,14 @@ void PickAccountRow::remove() {
     }
 }
 
+void PickAccountRow::paintEvent(QPaintEvent* event) {
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    QWidget::paintEvent(event);
+}
+
 AddAccountRow::AddAccountRow(QWidget* parent) : ClickableWidget(parent) {
     QHBoxLayout* layout = new QHBoxLayout(this);
     QLabel* image = new QLabel(this);
@@ -113,4 +119,12 @@ AddAccountRow::AddAccountRow(QWidget* parent) : ClickableWidget(parent) {
     label->setText("Add a new account");
     layout->addWidget(label);
     setLayout(layout);
+}
+
+void AddAccountRow::paintEvent(QPaintEvent* event) {
+    QStyleOption opt;
+    opt.init(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+    QWidget::paintEvent(event);
 }

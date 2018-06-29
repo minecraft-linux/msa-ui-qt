@@ -3,5 +3,6 @@
         <file>src/injectjs.js</file>
         <file>res/add_icon.svg</file>
         <file>res/default_profile.svg</file>
+        <file>res/style.css</file>
     </qresource>
 </RCC>
