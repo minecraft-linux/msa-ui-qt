@@ -103,6 +103,12 @@ void PickAccountRow::remove() {
 
 AddAccountRow::AddAccountRow(QWidget* parent) : ClickableWidget(parent) {
     QHBoxLayout* layout = new QHBoxLayout(this);
+    QLabel* image = new QLabel(this);
+    layout->setSpacing(10);
+    image->setContentsMargins(8, 0, 8, 0);
+    image->setPixmap(QPixmap(":/res/add_icon.svg"));
+    image->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+    layout->addWidget(image);
     QLabel* label = new QLabel(this);
     label->setText("Add a new account");
     layout->addWidget(label);
