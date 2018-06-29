@@ -46,6 +46,8 @@ class ProfilePictureDownloadTask : public QObject {
 
     void onNetworkRequestFinished();
 
+    static QImage cropCircleImage(QImage const& source);
+
 public:
     ProfilePictureDownloadTask(QString cid, QString url, QObject* parent = nullptr,
                                ProfilePictureManager& manager = ProfilePictureManager::instance)

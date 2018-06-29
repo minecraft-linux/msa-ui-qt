@@ -4,6 +4,7 @@
 #include <QNetworkReply>
 #include <QStandardPaths>
 #include <QDir>
+#include <QPainter>
 #include <QSettings>
 
 ProfilePictureManager ProfilePictureManager::instance;
@@ -73,6 +74,7 @@ void ProfilePictureDownloadTask::onNetworkRequestFinished() {
         imageReader.setScaledSize(QSize(32, 32));
         QImage res(32, 32, QImage::Format_RGB32);
         if (imageReader.read(&res)) {
+            res = cropCircleImage(res);
             emit imageAvailable(res);
 
             ProfilePictureManager::CacheInfo cacheInfo;
@@ -83,4 +85,16 @@ void ProfilePictureDownloadTask::onNetworkRequestFinished() {
     } else if (status == 404) {
         manager.removeCachedImage(cid);
     }
+}
+
+QImage ProfilePictureDownloadTask::cropCircleImage(QImage const& source) {
+    QImage ret (source.width(), source.height(), QImage::Format_ARGB32);
+    ret.fill(Qt::transparent);
+    QPainter painter (&ret);
+    painter.setRenderHint(QPainter::Antialiasing);
+    QPainterPath clipPath;
+    clipPath.addEllipse(0, 0, source.width(), source.height());
+    painter.setClipPath(clipPath);
+    painter.drawImage(0, 0, source);
+    return ret;
 }
