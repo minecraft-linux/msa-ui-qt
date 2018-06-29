@@ -75,7 +75,7 @@ PickAccountRow::PickAccountRow(PickAccountEntry const& entry, QPixmap& fallbackI
     setLayout(layout);
 
     QString imageUrl = "https://storage.live.com/users/0x" + entry.cid + "/myprofile/expressionprofile/profilephoto:UserTileStatic";
-    ProfilePictureDownloadTask* task = new ProfilePictureDownloadTask(imageUrl, this);
+    ProfilePictureDownloadTask* task = new ProfilePictureDownloadTask(entry.cid, imageUrl, this);
     connect(task, &ProfilePictureDownloadTask::imageAvailable, this, &PickAccountRow::setImage);
     task->start();
 }
