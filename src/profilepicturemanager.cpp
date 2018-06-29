@@ -36,25 +36,51 @@ void ProfilePictureManager::writeCachedMeta(QString const& filePath, CacheInfo c
     settings.setValue("CacheInfo/ETag", cacheInfo.etag);
 }
 
+void ProfilePictureManager::cacheImage(QString const& cid, CacheInfo const& cacheInfo, QImage const& image) {
+    writeCachedMeta(getCachedMetaPath(cid), cacheInfo);
+    image.save(getCachedImagePath(cid));
+}
+
+void ProfilePictureManager::removeCachedImage(QString const& cid) {
+    QFile::remove(getCachedImagePath(cid));
+    QFile::remove(getCachedMetaPath(cid));
+}
+
+
 void ProfilePictureDownloadTask::start() {
     ProfilePictureManager::CacheInfo cacheInfo;
     if (QFile::exists(manager.getCachedImagePath(cid)) && QFile::exists(manager.getCachedMetaPath(cid))) {
         cacheInfo = manager.readCachedMeta(manager.getCachedMetaPath(cid));
         emit imageAvailable(QImage(manager.getCachedImagePath(cid)));
     }
-    doNetworkRequest();
+    doNetworkRequest(cacheInfo);
 }
 
-void ProfilePictureDownloadTask::doNetworkRequest() {
+void ProfilePictureDownloadTask::doNetworkRequest(ProfilePictureManager::CacheInfo const& cacheInfo) {
     QNetworkRequest request (url);
+    if (cacheInfo.url == url) {
+        request.setRawHeader("If-None-Match", (QStringLiteral("\"") + cacheInfo.etag + QStringLiteral("\"")).toUtf8());
+    }
     QNetworkReply* reply = manager.networkManager().get(request);
     connect(reply, &QNetworkReply::finished, this, &ProfilePictureDownloadTask::onNetworkRequestFinished);
 }
 
 void ProfilePictureDownloadTask::onNetworkRequestFinished() {
-    QImageReader imageReader ((QNetworkReply*) sender());
-    imageReader.setScaledSize(QSize(32, 32));
-    QImage res (32, 32, QImage::Format_RGB32);
-    if (imageReader.read(&res))
-        emit imageAvailable(res);
+    QNetworkReply* reply = (QNetworkReply*) sender();
+    int status = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    if (status == 200) {
+        QImageReader imageReader(reply);
+        imageReader.setScaledSize(QSize(32, 32));
+        QImage res(32, 32, QImage::Format_RGB32);
+        if (imageReader.read(&res)) {
+            emit imageAvailable(res);
+
+            ProfilePictureManager::CacheInfo cacheInfo;
+            cacheInfo.url = url;
+            cacheInfo.etag = reply->rawHeader("ETag");
+            manager.cacheImage(cid, cacheInfo, res);
+        }
+    } else if (status == 404) {
+        manager.removeCachedImage(cid);
+    }
 }

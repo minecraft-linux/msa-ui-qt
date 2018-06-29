@@ -31,6 +31,9 @@ public:
     CacheInfo readCachedMeta(QString const& filePath);
     void writeCachedMeta(QString const& filePath, CacheInfo const& cacheInfo);
 
+    void cacheImage(QString const& cid, CacheInfo const& cacheInfo, QImage const& image);
+    void removeCachedImage(QString const& cid);
+
 };
 
 class ProfilePictureDownloadTask : public QObject {
@@ -39,7 +42,7 @@ class ProfilePictureDownloadTask : public QObject {
     ProfilePictureManager& manager;
     QString cid, url;
 
-    void doNetworkRequest();
+    void doNetworkRequest(ProfilePictureManager::CacheInfo const& cacheInfo);
 
     void onNetworkRequestFinished();
 
