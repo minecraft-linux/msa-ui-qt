@@ -5,5 +5,6 @@ set(CPACK_PACKAGE_CONTACT "https://github.com/minecraft-linux/msa-manifest/issue
 set(CPACK_GENERATOR "TGZ;DEB")
 set(CPACK_INSTALL_CMAKE_PROJECTS "${CMAKE_CURRENT_BINARY_DIR};msa-ui-qt;msa-ui-qt;/")
 set(CPACK_OUTPUT_CONFIG_FILE CPackConfig.cmake)
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>=2.14), libqt5widgets5, libqt5webenginewidgets5")
 
 include(CPack)
