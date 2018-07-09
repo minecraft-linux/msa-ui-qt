@@ -2,12 +2,23 @@
 #include "webloginwindow.h"
 #include "pickaccountwindow.h"
 #include <QUrl>
+#ifdef __APPLE__
+#include "macosutil.h"
+#endif
 
 LoginUIHandler::LoginUIHandler(QApplication& app) : app(app) {
 }
 
 void LoginUIHandler::onStopRequested() {
     app.quit();
+}
+
+void LoginUIHandler::activateWindow(QWidget* window) {
+    window->raise();
+    window->activateWindow();
+#ifdef __APPLE__
+    MacOSUtil::activateApplication();
+#endif
 }
 
 void LoginUIHandler::pickAccount(QVector<PickAccountEntry> const& accounts,
@@ -25,6 +36,7 @@ void LoginUIHandler::pickAccount(QVector<PickAccountEntry> const& accounts,
         window->deleteLater();
     });
     window->open();
+    activateWindow(window);
 }
 
 void LoginUIHandler::openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler) {
@@ -42,4 +54,5 @@ void LoginUIHandler::openBrowser(QString const& url, simpleipc::server::rpc_hand
         window->deleteLater();
     });
     window->open();
+    activateWindow(window);
 }

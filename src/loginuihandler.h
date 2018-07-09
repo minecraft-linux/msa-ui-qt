@@ -11,6 +11,8 @@ class LoginUIHandler : public QObject {
 private:
     QApplication& app;
 
+    void activateWindow(QWidget* window);
+
 public:
     explicit LoginUIHandler(QApplication& app);
 

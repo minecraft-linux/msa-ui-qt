@@ -1,6 +1,9 @@
 .pick-account-list {
     background: white;
 }
+.pick-account-list QLabel {
+    color: black;
+}
 .pick-account-list > *:hover {
     background: rgba(0, 0, 0, 0.05);
 }

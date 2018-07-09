@@ -6,12 +6,18 @@
 #include "loginipcservice.h"
 #include "loginuihandler.h"
 #include "msadaemonmanager.h"
+#ifdef __APPLE__
+#include "macosutil.h"
+#endif
 
 int main(int argc, char *argv[]) {
     qRegisterMetaType<simpleipc::server::rpc_handler::result_handler>("simpleipc::server::rpc_handler::result_handler");
     qRegisterMetaType<QVector<PickAccountEntry>>("QVector<PickAccountEntry>");
 
     QApplication app(argc, argv);
+#ifdef __APPLE__
+    MacOSUtil::hideDockIcon();
+#endif
     {
         QFile file (":/res/style.css");
         file.open(QIODevice::ReadOnly);
