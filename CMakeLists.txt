@@ -18,5 +18,9 @@ if (APPLE)
     target_link_libraries(msa-ui-qt "-framework AppKit")
 endif()
 
+if (QT_RPATH AND NOT QT_RPATH STREQUAL "")
+    set_target_properties(msa-ui-qt PROPERTIES INSTALL_RPATH ${QT_RPATH})
+endif()
+
 install(TARGETS msa-ui-qt RUNTIME COMPONENT msa-ui-qt DESTINATION bin)
 include(CPackSettings.cmake)
