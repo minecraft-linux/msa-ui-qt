@@ -5,6 +5,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QPainter>
+#include <QPainterPath>
 #include <QSettings>
 
 ProfilePictureManager ProfilePictureManager::instance;
