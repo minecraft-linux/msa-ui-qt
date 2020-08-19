@@ -28,5 +28,5 @@ void LoginIPCService::handlePickAccount(nlohmann::json const& data, rpc_handler:
 }
 
 void LoginIPCService::handleOpenBrowser(nlohmann::json const& data, rpc_handler::result_handler const& handler) {
-    emit openBrowser(QString::fromStdString(data["url"]), handler);
+    emit openBrowser(QString::fromStdString(data["url"]), QString::fromStdString(data["endurl"]), handler);
 }

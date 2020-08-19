@@ -39,8 +39,8 @@ void LoginUIHandler::pickAccount(QVector<PickAccountEntry> const& accounts,
     activateWindow(window);
 }
 
-void LoginUIHandler::openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler) {
-    WebLoginWindow* window = new WebLoginWindow(QUrl(url));
+void LoginUIHandler::openBrowser(QString const& url, QString const& endurl, simpleipc::server::rpc_handler::result_handler const& handler) {
+    WebLoginWindow* window = new WebLoginWindow(QUrl(url), QUrl(endurl));
     connect(window, &QDialog::finished, [window, handler](int result) {
         if (result == QDialog::Accepted) {
             nlohmann::json res;

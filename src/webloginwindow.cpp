@@ -9,9 +9,29 @@
 #include <QWebEngineCookieStore>
 #include <QWebEngineProfile>
 #include <QWebChannel>
+#include <QWebEngineUrlScheme>
+#include <QWebEngineUrlSchemeHandler>
+#include <QWebEngineUrlRequestJob>
+
 #include "materialbusyindicator.h"
 
-WebLoginWindow::WebLoginWindow(QUrl url, QWidget *parent) : QDialog(parent) {
+class XalSchemeHandler : public QWebEngineUrlSchemeHandler
+{
+public:
+    WebLoginWindow *loginwindow;
+
+    XalSchemeHandler(WebLoginWindow *parent) : QWebEngineUrlSchemeHandler(parent){
+        loginwindow = parent;
+    }
+
+    void requestStarted(QWebEngineUrlRequestJob *request)
+    {
+        loginwindow->setProperty("endurl", request->requestUrl().toString());
+        loginwindow->onFinalNext();
+    }
+};
+
+WebLoginWindow::WebLoginWindow(QUrl url, QUrl endurl, QWidget *parent) : QDialog(parent), endurl(endurl) {
     setWindowFlag(Qt::Dialog);
     setWindowTitle("Microsoft Account Sign-In");
     resize(480, 640);
@@ -34,9 +54,20 @@ WebLoginWindow::WebLoginWindow(QUrl url, QWidget *parent) : QDialog(parent) {
 }
 
 void WebLoginWindow::setupWebBrowser() {
-    connect(webView, &QWebEngineView::loadFinished, this, &WebLoginWindow::onLoadFinished);
-
-    injectWebScripts();
+    if (endurl.isEmpty()) {
+        connect(webView, &QWebEngineView::loadFinished, this, &WebLoginWindow::onLoadFinished);
+        injectWebScripts();
+    } else {
+        XalSchemeHandler *handler = new XalSchemeHandler(this);
+        scheme = endurl.scheme().toStdString();
+        QWebEngineUrlScheme scheme_(scheme.c_str());
+        scheme_.setSyntax(QWebEngineUrlScheme::Syntax::Path);
+        scheme_.setFlags(QWebEngineUrlScheme::SecureScheme);
+        QWebEngineUrlScheme::registerScheme(scheme_);
+        QWebEngineProfile::defaultProfile()->installUrlSchemeHandler(scheme.c_str(), handler);
+        // Note: This page doesn't load if done on loadFinished
+        stacked->setCurrentWidget(webView);
+    }
 
     QWebChannel* channel = new QWebChannel(webView);
     WebLoginWindowApi* api = new WebLoginWindowApi(this, webView);

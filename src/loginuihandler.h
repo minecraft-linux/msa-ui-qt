@@ -22,7 +22,7 @@ public slots:
     void pickAccount(QVector<PickAccountEntry> const& accounts,
                      simpleipc::server::rpc_handler::result_handler const& handler);
 
-    void openBrowser(QString const& url, simpleipc::server::rpc_handler::result_handler const& handler);
+    void openBrowser(QString const& url, QString const& endurl, simpleipc::server::rpc_handler::result_handler const& handler);
 
 };
 

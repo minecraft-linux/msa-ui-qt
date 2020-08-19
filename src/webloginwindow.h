@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QMap>
+#include <QUrl>
 
 class QStackedLayout;
 class QNetworkCookie;
@@ -15,6 +16,8 @@ private:
     QWidget* loadingIndicatorCtr;
     QWebEngineView* webView;
     QMap<QString, QString> propertyMap;
+    QUrl endurl;
+    std::string scheme;
 
     void setupWebBrowser();
     void injectWebScripts();
@@ -22,7 +25,7 @@ private:
     void onLoadFinished(bool ok);
 
 public:
-    explicit WebLoginWindow(QUrl url, QWidget *parent = nullptr);
+    explicit WebLoginWindow(QUrl url, QUrl endurl = {}, QWidget *parent = nullptr);
 
     QMap<QString, QString> const& properties() const { return propertyMap; }
 
