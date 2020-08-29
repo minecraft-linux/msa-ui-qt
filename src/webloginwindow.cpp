@@ -9,7 +9,9 @@
 #include <QWebEngineCookieStore>
 #include <QWebEngineProfile>
 #include <QWebChannel>
+#if QT_VERSION >= 0x51200
 #include <QWebEngineUrlScheme>
+#endif
 #include <QWebEngineUrlSchemeHandler>
 #include <QWebEngineUrlRequestJob>
 
@@ -60,10 +62,12 @@ void WebLoginWindow::setupWebBrowser() {
     } else {
         XalSchemeHandler *handler = new XalSchemeHandler(this);
         scheme = endurl.scheme().toStdString();
+#if QT_VERSION >= 0x51200
         QWebEngineUrlScheme scheme_(scheme.c_str());
         scheme_.setSyntax(QWebEngineUrlScheme::Syntax::Path);
         scheme_.setFlags(QWebEngineUrlScheme::SecureScheme);
         QWebEngineUrlScheme::registerScheme(scheme_);
+#endif
         QWebEngineProfile::defaultProfile()->installUrlSchemeHandler(scheme.c_str(), handler);
         // Note: This page doesn't load if done on loadFinished
         stacked->setCurrentWidget(webView);
