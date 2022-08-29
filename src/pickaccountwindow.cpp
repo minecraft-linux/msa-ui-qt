@@ -17,11 +17,19 @@ PickAccountWindow::PickAccountWindow(QVector<PickAccountEntry> entries, QWidget*
     QPixmap defaultProfilePixmap (":/res/default_profile.svg");
 
     QVBoxLayout* layout = new QVBoxLayout(this);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     layout->setMargin(0);
+#else
+    layout->setContentsMargins(0,0,0,0);
+#endif
     QScrollArea* listScrollArea = new QScrollArea(this);
     QWidget* listWidget = new QWidget(this);
     QVBoxLayout* listLayout = new QVBoxLayout(listWidget);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     listLayout->setMargin(0);
+#else
+    listLayout->setContentsMargins(0,0,0,0);
+#endif
     listLayout->setSpacing(0);
     listWidget->setProperty("class", "pick-account-list");
     listWidget->setLayout(listLayout);
@@ -101,7 +109,11 @@ void PickAccountRow::remove() {
 
 void PickAccountRow::paintEvent(QPaintEvent* event) {
     QStyleOption opt;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     opt.init(this);
+#else
+    opt.initFrom(this);
+#endif
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     QWidget::paintEvent(event);
@@ -123,7 +135,11 @@ AddAccountRow::AddAccountRow(QWidget* parent) : ClickableWidget(parent) {
 
 void AddAccountRow::paintEvent(QPaintEvent* event) {
     QStyleOption opt;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     opt.init(this);
+#else
+    opt.initFrom(this);
+#endif
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     QWidget::paintEvent(event);
